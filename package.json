@@ -1,0 +1,61 @@
+{
+  "name": "@wisersolutions/transpile-js",
+  "version": "0.0.0",
+  "description": "Default Babel config and build scripts for other JavaScript packages",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WisePricer/transpile-js"
+  },
+  "author": "Wiser Solutions, Inc.",
+  "license": "MIT",
+  "main": "./index.js",
+  "bin": {
+    "transpile-js": "./index.js"
+  },
+  "files": [
+    "index.js",
+    "env.js",
+    "babel.config.js"
+  ],
+  "scripts": {
+    "format": "prettier --write \"**/*.js\" --loglevel warn",
+    "lint": "eslint -f @wisersolutions/eslint-formatter-idea ./src",
+    "test": "echo 'This package has no tests.'"
+  },
+  "devDependencies": {
+    "@wisersolutions/eslint-config": "^1.0.3",
+    "@wisersolutions/eslint-formatter-idea": "^1.0.2",
+    "babel-eslint": "^9.0.0",
+    "eslint": "^5.6.0",
+    "eslint-config-prettier": "^3.0.1",
+    "eslint-plugin-react": "^7.11.1",
+    "prettier": "^1.14.2"
+  },
+  "dependencies": {
+    "@babel/core": "^7.0.0",
+    "@babel/plugin-proposal-class-properties": "^7.0.0",
+    "@babel/plugin-proposal-decorators": "^7.0.0",
+    "@babel/plugin-proposal-do-expressions": "^7.0.0",
+    "@babel/plugin-proposal-export-default-from": "^7.0.0",
+    "@babel/plugin-proposal-export-namespace-from": "^7.0.0",
+    "@babel/plugin-proposal-function-bind": "^7.0.0",
+    "@babel/plugin-proposal-function-sent": "^7.0.0",
+    "@babel/plugin-proposal-json-strings": "^7.0.0",
+    "@babel/plugin-proposal-logical-assignment-operators": "^7.0.0",
+    "@babel/plugin-proposal-nullish-coalescing-operator": "^7.0.0",
+    "@babel/plugin-proposal-numeric-separator": "^7.0.0",
+    "@babel/plugin-proposal-optional-chaining": "^7.0.0",
+    "@babel/plugin-proposal-pipeline-operator": "^7.0.0",
+    "@babel/plugin-proposal-throw-expressions": "^7.0.0",
+    "@babel/plugin-syntax-dynamic-import": "^7.0.0",
+    "@babel/plugin-syntax-import-meta": "^7.0.0",
+    "@babel/plugin-transform-runtime": "^7.0.0",
+    "@babel/preset-env": "^7.0.0",
+    "@babel/preset-react": "^7.0.0",
+    "@babel/runtime": "^7.0.0",
+    "babel-core": "^7.0.0-bridge.0",
+    "chalk": "^2.4.1",
+    "fs-extra": "^7.0.0",
+    "minimatch": "^3.0.4"
+  }
+}
