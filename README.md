@@ -8,6 +8,12 @@ Default Babel config and build scripts for other JavaScript packages
     ```sh
     npm install @wisersolutions/transpile-js
     ```
+1. Create a `babel.config.js` or `.babelrc.js` file in the root folder of your package:
+    ```javascript
+    module.exports = require('@wisersolutions/transpile-js/babel.config')
+    ```
+    _This step is optional, but needed if you use any other tools that rely on Babel, such as
+    Eslint or Jest._
 1. Add a pre-publish task to `package.json` and set the entry points for the published package:
     ```json5
     {
@@ -21,14 +27,6 @@ Default Babel config and build scripts for other JavaScript packages
     (assuming your entry point is `src/index.js`).
 1. Add `/es` and `/lib` to `.gitignore` and create (and populate if needed) a `.npmignore` file,
   so that the transpiled code isn't added to VCS, but it _is_ published.
-
-If you need to customize Babel config, create a `babel.config.js` or `.babelrc.js` file in the root folder
-of your package and extend the default config:
-
-```javascript
-const defaultConfig = require('@wisersolutions/transpile-js/babel.config')
-module.exports = Object.assign(defaultConfig, { /* ... */ })
-```
 
 ## Development
 
