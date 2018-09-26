@@ -7,14 +7,19 @@ const { copySync, outputFileSync } = require('fs-extra')
 const babel = require('@babel/core')
 const chalk = require('chalk')
 const minimatch = require('minimatch')
+const parseArgs = require('minimist')
 
 const { MODULE, LIB } = require('./env')
 
-const { cyan, green, white } = chalk
-const path = cyan
-const log = (...args) => console.log(white.dim('transpile-js:'), ...args)
+//region Config
 
-const [, , sourceFolder = 'src'] = process.argv
+const { cyan, green, red, white } = chalk
+const path = cyan
+
+const {
+  _: [sourceFolder = 'src'],
+  verbose
+} = parseArgs(process.argv.slice(2), { boolean: ['verbose'] })
 const moduleFolder = 'es'
 const libFolder = 'lib'
 
@@ -22,6 +27,14 @@ const cwd = resolve('./')
 const src = resolve(sourceFolder)
 const mod = resolve(moduleFolder)
 const lib = resolve(libFolder)
+
+const partialConfig = babel.loadPartialConfig({ filename: resolve('./package.json') })
+const useDefaultBabelConfig = !partialConfig.hasFilesystemConfig()
+
+//endregion
+//region Helpers
+
+const log = (...args) => console.log(white.dim('transpile-js:'), ...args) // eslint-disable-line no-console
 
 function* walkSync(dir) {
   const files = readdirSync(dir)
@@ -35,43 +48,33 @@ function* walkSync(dir) {
   }
 }
 
-const partialConfig = babel.loadPartialConfig({ filename: resolve('./package.json') })
-const useDefaultBabelConfig = !partialConfig.hasFilesystemConfig()
+function transpileJs(filename, relativePath) {
+  const code = readFileSync(filename, 'utf8')
+  const { ast } = babel.transformSync(code, {
+    filename,
+    ast: true,
+    code: false,
+    configFile: useDefaultBabelConfig ? resolve(__dirname, 'babel.config.js') : undefined
+  })
 
-const rules = [
-  ['**/*.test.js', () => {}, 'ignore'],
-  [
-    '**/*.js',
-    (filename, relativePath) => {
-      const code = readFileSync(filename, 'utf8')
-      const { ast } = babel.transformSync(code, {
-        filename,
-        ast: true,
-        code: false,
-        configFile: useDefaultBabelConfig ? resolve(__dirname, 'babel.config.js') : undefined
-      })
+  const { code: moduleCode } = babel.transformFromAstSync(ast, code, {
+    filename,
+    envName: MODULE,
+    sourceMaps: false
+  })
+  outputFileSync(resolve(mod, relativePath), moduleCode)
 
-      const { code: moduleCode } = babel.transformFromAstSync(ast, code, {
-        filename,
-        envName: MODULE,
-        sourceMaps: false
-      })
-      outputFileSync(resolve(mod, relativePath), moduleCode)
+  const { code: libCode } = babel.transformFromAstSync(ast, code, { filename, envName: LIB, sourceMaps: false })
+  outputFileSync(resolve(lib, relativePath), libCode)
+}
 
-      const { code: libCode } = babel.transformFromAstSync(ast, code, { filename, envName: LIB, sourceMaps: false })
-      outputFileSync(resolve(lib, relativePath), libCode)
-    },
-    'transpile'
-  ],
-  [
-    '**/*',
-    (file, relativePath) => {
-      copySync(file, resolve(mod, relativePath))
-      copySync(file, resolve(lib, relativePath))
-    },
-    'copy'
-  ]
-]
+function copyAsset(filename, relativePath) {
+  copySync(filename, resolve(mod, relativePath))
+  copySync(filename, resolve(lib, relativePath))
+}
+
+//endregion
+//region Script
 
 log(`Cleaning files from previous build (${path(moduleFolder)}, ${path(libFolder)}).`)
 spawnSync('rm', ['-rf', moduleFolder, libFolder])
@@ -82,11 +85,26 @@ log(
     : `Babel config found in ${path(relative(cwd, partialConfig.babelrc || partialConfig.config))}.`
 )
 
-for (const absolutePath of walkSync(src)) {
-  const [, task, msg] = rules.find(rule => minimatch(absolutePath, rule[0]))
-  const relativePath = relative(src, absolutePath)
-  task(absolutePath, relativePath)
-  log(`${path(relativePath)} ... ${msg}`)
+const ignore = ['**/*.test.js']
+const rules = [['**/*.js', transpileJs, 'transpiled'], ['**/*', copyAsset, 'copied']]
+let processedCount = 0
+try {
+  for (const absolutePath of walkSync(src)) {
+    const [, task, msg = 'ignored'] =
+      (!ignore.find(glob => minimatch(absolutePath, glob)) && rules.find(rule => minimatch(absolutePath, rule[0]))) ||
+      []
+    const relativePath = relative(src, absolutePath)
+    if (task) {
+      task(absolutePath, relativePath)
+      ++processedCount
+    }
+    if (verbose) log(`${path(relativePath)} ... ${msg}`)
+  }
+} catch (e) {
+  log(`${red('✖ Failed.')}\n${e.message ? `${e.name}: ${e.message}` : e}`)
+  process.exit(1)
 }
 
-log(`${green('√ Done.')} Sources are transpiled and ready for publishing.`)
+log(`${green('√ Done.')} ${processedCount} sources are ready for publishing.`)
+
+//endregion
