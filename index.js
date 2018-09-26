@@ -52,6 +52,9 @@ function transpileJs(filename, relativePath) {
   const code = readFileSync(filename, 'utf8')
   const { ast } = babel.transformSync(code, {
     filename,
+    // `modules: false` apparently needs to be set in both the AST parsing and the code transform steps.
+    // If it's missing in either one, ES6 module statements (import/export) get transformed.
+    envName: MODULE,
     ast: true,
     code: false,
     configFile: useDefaultBabelConfig ? resolve(__dirname, 'babel.config.js') : undefined

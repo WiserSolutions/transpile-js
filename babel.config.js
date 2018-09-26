@@ -8,7 +8,7 @@ module.exports = api => ({
         // when transpiling as ES6 module, import only used polyfills...
         useBuiltIns: api.env(MODULE) ? 'usage' : false,
         // ...and don't transpile import/export statements
-        modules: api.env(MODULE) ? false : 'umd'
+        modules: api.env(MODULE) ? false : 'commonjs'
       }
     ],
     '@babel/preset-react'
@@ -46,19 +46,5 @@ module.exports = api => ({
     '@babel/plugin-proposal-nullish-coalescing-operator',
     '@babel/plugin-proposal-do-expressions',
     '@babel/plugin-proposal-function-bind'
-  ],
-  env: {
-    es: {
-      presets: [
-        [
-          '@babel/preset-env',
-          {
-            useBuiltIns: 'usage',
-            modules: false
-          }
-        ],
-        '@babel/preset-react'
-      ]
-    }
-  }
+  ]
 })
