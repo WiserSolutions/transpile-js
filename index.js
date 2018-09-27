@@ -88,7 +88,7 @@ log(
     : `Babel config found in ${path(relative(cwd, partialConfig.babelrc || partialConfig.config))}.`
 )
 
-const ignore = ['**/*.test.js']
+const ignore = ['**/*.test.js', '**/*.test.js.snap']
 const rules = [['**/*.js', transpileJs, 'transpiled'], ['**/*', copyAsset, 'copied']]
 let processedCount = 0
 try {
