@@ -1,13 +1,14 @@
 #!/usr/bin/env node
 
 const { spawnSync } = require('child_process')
-const { relative, resolve, join } = require('path')
-const { readdirSync, statSync, readFileSync } = require('fs')
+const { relative, resolve } = require('path')
+const { readFileSync } = require('fs')
 const { copySync, outputFileSync } = require('fs-extra')
 const babel = require('@babel/core')
 const chalk = require('chalk')
 const minimatch = require('minimatch')
 const parseArgs = require('minimist')
+const { walkSync } = require('@hon2a/walk-sync')
 
 const { MODULE, LIB } = require('./env')
 
@@ -35,18 +36,6 @@ const useDefaultBabelConfig = !partialConfig.hasFilesystemConfig()
 //region Helpers
 
 const log = (...args) => console.log(white.dim('transpile-js:'), ...args) // eslint-disable-line no-console
-
-function* walkSync(dir) {
-  const files = readdirSync(dir)
-  for (const file of files) {
-    const pathToFile = join(dir, file)
-    if (statSync(pathToFile).isDirectory()) {
-      yield* walkSync(pathToFile)
-    } else {
-      yield pathToFile
-    }
-  }
-}
 
 function transpileJs(filename, relativePath) {
   const code = readFileSync(filename, 'utf8')
