@@ -14,6 +14,7 @@ module.exports = api => ({
     '@babel/preset-react'
   ],
   plugins: [
+    // ES next transforms
     [
       '@babel/plugin-transform-runtime',
       {
@@ -45,6 +46,9 @@ module.exports = api => ({
     ],
     '@babel/plugin-proposal-nullish-coalescing-operator',
     '@babel/plugin-proposal-do-expressions',
-    '@babel/plugin-proposal-function-bind'
+    '@babel/plugin-proposal-function-bind',
+
+    // custom transforms
+    'styled-components'
   ]
 })
