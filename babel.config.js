@@ -8,7 +8,8 @@ module.exports = api => ({
         // when transpiling as ES6 module, import only used polyfills...
         useBuiltIns: api.env(MODULE) ? 'usage' : false,
         // ...and don't transpile import/export statements
-        modules: api.env(MODULE) ? false : 'commonjs'
+        modules: api.env(MODULE) ? false : 'commonjs',
+        corejs: 3
       }
     ],
     '@babel/preset-react'
@@ -18,7 +19,8 @@ module.exports = api => ({
     [
       '@babel/plugin-transform-runtime',
       {
-        regenerator: true
+        regenerator: true,
+        corejs: 3
       }
     ],
     '@babel/plugin-syntax-dynamic-import',
