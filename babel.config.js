@@ -4,13 +4,18 @@ module.exports = api => ({
   presets: [
     [
       '@babel/preset-env',
-      {
-        // when transpiling as ES6 module, import only used polyfills...
-        useBuiltIns: api.env(MODULE) ? 'usage' : false,
-        // ...and don't transpile import/export statements
-        modules: api.env(MODULE) ? false : 'commonjs',
-        corejs: 3
-      }
+      api.env(MODULE)
+        ? {
+            // when transpiling as ES6 module, import only used polyfills...
+            useBuiltIns: 'usage',
+            // ...and don't transpile import/export statements
+            modules: false,
+            corejs: 3
+          }
+        : {
+            useBuiltIns: false,
+            modules: 'commonjs'
+          }
     ],
     '@babel/preset-react'
   ],
