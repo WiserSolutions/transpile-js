@@ -59,6 +59,7 @@
     "@hon2a/walk-sync": "^0.0.5",
     "babel-plugin-styled-components": "^1.10.6",
     "chalk": "^2.4.2",
+    "core-js": "^3.1.4",
     "fs-extra": "^8.1.0",
     "minimatch": "^3.0.4",
     "minimist": "^1.2.0"
