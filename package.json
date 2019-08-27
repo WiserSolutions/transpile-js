@@ -1,6 +1,6 @@
 {
   "name": "@wisersolutions/transpile-js",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "description": "Default Babel config and build scripts for other JavaScript packages",
   "repository": {
     "type": "git",
