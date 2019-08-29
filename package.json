@@ -61,6 +61,7 @@
     "chalk": "^2.4.2",
     "core-js": "^3.1.4",
     "fs-extra": "^8.1.0",
+    "lodash.escaperegexp": "^4.1.2",
     "minimatch": "^3.0.4",
     "minimist": "^1.2.0"
   }

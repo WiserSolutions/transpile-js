@@ -9,6 +9,7 @@ const chalk = require('chalk')
 const minimatch = require('minimatch')
 const parseArgs = require('minimist')
 const { walkSync } = require('@hon2a/walk-sync')
+const escapeRegExp = require('lodash.escaperegexp')
 
 const { MODULE, LIB } = require('./env')
 
@@ -38,7 +39,12 @@ const useDefaultBabelConfig = !partialConfig.hasFilesystemConfig()
 
 const log = (...args) => console.log(white.dim('transpile-js:'), ...args) // eslint-disable-line no-console
 
+const extensionRegExp = `(?:${extensions
+  .split(',')
+  .map(escapeRegExp)
+  .join('|')})$`
 function transpileJs(filename, relativePath) {
+  const outputPath = relativePath.replace(extensionRegExp, '.js')
   const code = readFileSync(filename, 'utf8')
   const { ast } = babel.transformSync(code, {
     filename,
@@ -55,10 +61,10 @@ function transpileJs(filename, relativePath) {
     envName: MODULE,
     sourceMaps: false
   })
-  outputFileSync(resolve(mod, relativePath), moduleCode)
+  outputFileSync(resolve(mod, outputPath), moduleCode)
 
   const { code: libCode } = babel.transformFromAstSync(ast, code, { filename, envName: LIB, sourceMaps: false })
-  outputFileSync(resolve(lib, relativePath), libCode)
+  outputFileSync(resolve(lib, outputPath), libCode)
 }
 
 function copyAsset(filename, relativePath) {
