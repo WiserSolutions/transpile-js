@@ -19,8 +19,9 @@ const path = cyan
 
 const {
   _: [sourceFolder = 'src'],
-  verbose
-} = parseArgs(process.argv.slice(2), { boolean: ['verbose'] })
+  verbose,
+  extensions
+} = parseArgs(process.argv.slice(2), { boolean: ['verbose'], string: ['extensions'], default: { extensions: '.js' } })
 const moduleFolder = 'es'
 const libFolder = 'lib'
 
@@ -77,8 +78,9 @@ log(
     : `Babel config found in ${path(relative(cwd, partialConfig.babelrc || partialConfig.config))}.`
 )
 
-const ignore = ['**/*.test.js', '**/*.test.js.snap']
-const rules = [['**/*.js', transpileJs, 'transpiled'], ['**/*', copyAsset, 'copied']]
+const ext = `{${extensions.join(',')}}`
+const ignore = [`**/*.test${ext}`, `**/*.test${ext}.snap`]
+const rules = [[`**/*${ext}`, transpileJs, 'transpiled'], ['**/*', copyAsset, 'copied']]
 let processedCount = 0
 try {
   for (const absolutePath of walkSync(src)) {
