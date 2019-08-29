@@ -78,9 +78,8 @@ log(
     : `Babel config found in ${path(relative(cwd, partialConfig.babelrc || partialConfig.config))}.`
 )
 
-const ext = `{${extensions.join(',')}}`
-const ignore = [`**/*.test${ext}`, `**/*.test${ext}.snap`]
-const rules = [[`**/*${ext}`, transpileJs, 'transpiled'], ['**/*', copyAsset, 'copied']]
+const ignore = [`**/*.test${extensions}`, `**/*.test${extensions}.snap`]
+const rules = [[`**/*${extensions}`, transpileJs, 'transpiled'], ['**/*', copyAsset, 'copied']]
 let processedCount = 0
 try {
   for (const absolutePath of walkSync(src)) {
