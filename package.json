@@ -4,7 +4,7 @@
   "description": "Default Babel config and build scripts for other JavaScript packages",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/WisePricer/transpile-js"
+    "url": "git+https://github.com/WiserSolutions/transpile-js"
   },
   "author": "Wiser Solutions, Inc.",
   "contributors": [
