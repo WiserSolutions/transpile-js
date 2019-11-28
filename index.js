@@ -87,7 +87,10 @@ log(
 )
 
 const ignore = [`**/*.test${extensions}`, `**/*.test${extensions}.snap`]
-const rules = [[`**/*${extensions}`, transpileJs, 'transpiled'], ['**/*', copyAsset, 'copied']]
+const rules = [
+  [`**/*${extensions}`, transpileJs, 'transpiled'],
+  ['**/*', copyAsset, 'copied']
+]
 let processedCount = 0
 try {
   for (const absolutePath of walkSync(src)) {
