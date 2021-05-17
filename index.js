@@ -39,12 +39,7 @@ const useDefaultBabelConfig = !partialConfig.hasFilesystemConfig()
 
 const log = (...args) => console.log(white.dim('transpile-js:'), ...args) // eslint-disable-line no-console
 
-const extensionRegExp = new RegExp(
-  `(?:${extensions
-    .split(',')
-    .map(escapeRegExp)
-    .join('|')})$`
-)
+const extensionRegExp = new RegExp(`(?:${extensions.split(',').map(escapeRegExp).join('|')})$`)
 function transpileJs(filename, relativePath) {
   const outputPath = relativePath.replace(extensionRegExp, '.js')
   const code = readFileSync(filename, 'utf8')
