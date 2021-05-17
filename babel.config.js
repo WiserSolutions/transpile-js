@@ -17,7 +17,12 @@ module.exports = api => ({
             modules: 'commonjs'
           }
     ],
-    '@babel/preset-react'
+    [
+      '@babel/preset-react',
+      {
+        runtime: 'automatic'
+      }
+    ]
   ],
   plugins: [
     // ES next transforms
