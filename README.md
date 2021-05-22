@@ -13,7 +13,8 @@ Default Babel config and build scripts for other JavaScript packages
     module.exports = require('@wisersolutions/transpile-js/babel.config')
     ```
     _This step is optional, but needed if you use any other tools that rely on Babel, such as
-    Eslint or Jest._
+    Eslint or Jest. However, if you do this, you need to install the used presets
+   (`@babel/preset-env` & `@babel/preset-react`) in your project as well._
 1. Add a pre-publish task to `package.json` and set the entry points for the published package:
     ```json5
     {
