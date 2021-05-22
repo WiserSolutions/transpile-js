@@ -33,6 +33,7 @@ const lib = resolve(libFolder)
 
 const partialConfig = babel.loadPartialConfig({ filename: resolve('./package.json') })
 const useDefaultBabelConfig = !partialConfig.hasFilesystemConfig()
+const configFile = useDefaultBabelConfig ? resolve(__dirname, 'babel.config.js') : undefined
 
 //endregion
 //region Helpers
@@ -50,17 +51,23 @@ function transpileJs(filename, relativePath) {
     envName: MODULE,
     ast: true,
     code: false,
-    configFile: useDefaultBabelConfig ? resolve(__dirname, 'babel.config.js') : undefined
+    configFile
   })
 
   const { code: moduleCode } = babel.transformFromAstSync(ast, code, {
     filename,
     envName: MODULE,
-    sourceMaps: false
+    sourceMaps: false,
+    configFile
   })
   outputFileSync(resolve(mod, outputPath), moduleCode)
 
-  const { code: libCode } = babel.transformFromAstSync(ast, code, { filename, envName: LIB, sourceMaps: false })
+  const { code: libCode } = babel.transformFromAstSync(ast, code, {
+    filename,
+    envName: LIB,
+    sourceMaps: false,
+    configFile
+  })
   outputFileSync(resolve(lib, outputPath), libCode)
 }
 
