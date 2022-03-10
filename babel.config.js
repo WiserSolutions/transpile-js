@@ -1,6 +1,6 @@
 const { MODULE } = require('./env')
 
-module.exports = api => ({
+module.exports = (api) => ({
   presets: [
     [
       '@babel/preset-env',

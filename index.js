@@ -22,7 +22,11 @@ const {
   _: [sourceFolder = 'src'],
   verbose,
   extensions
-} = parseArgs(process.argv.slice(2), { boolean: ['verbose'], string: ['extensions'], default: { extensions: '.js' } })
+} = parseArgs(process.argv.slice(2), {
+  boolean: ['verbose'],
+  string: ['extensions'],
+  default: { extensions: '.js' }
+})
 const moduleFolder = 'es'
 const libFolder = 'lib'
 
@@ -31,16 +35,22 @@ const src = resolve(sourceFolder)
 const mod = resolve(moduleFolder)
 const lib = resolve(libFolder)
 
-const partialConfig = babel.loadPartialConfig({ filename: resolve('./package.json') })
+const partialConfig = babel.loadPartialConfig({
+  filename: resolve('./package.json')
+})
 const useDefaultBabelConfig = !partialConfig.hasFilesystemConfig()
-const configFile = useDefaultBabelConfig ? resolve(__dirname, 'babel.config.js') : undefined
+const configFile = useDefaultBabelConfig
+  ? resolve(__dirname, 'babel.config.js')
+  : undefined
 
 //endregion
 //region Helpers
 
 const log = (...args) => console.log(white.dim('transpile-js:'), ...args) // eslint-disable-line no-console
 
-const extensionRegExp = new RegExp(`(?:${extensions.split(',').map(escapeRegExp).join('|')})$`)
+const extensionRegExp = new RegExp(
+  `(?:${extensions.split(',').map(escapeRegExp).join('|')})$`
+)
 function transpileJs(filename, relativePath) {
   const outputPath = relativePath.replace(extensionRegExp, '.js')
   const code = readFileSync(filename, 'utf8')
@@ -79,13 +89,19 @@ function copyAsset(filename, relativePath) {
 //endregion
 //region Script
 
-log(`Cleaning files from previous build (${path(moduleFolder)}, ${path(libFolder)}).`)
+log(
+  `Cleaning files from previous build (${path(moduleFolder)}, ${path(
+    libFolder
+  )}).`
+)
 spawnSync('rm', ['-rf', moduleFolder, libFolder])
 
 log(
   useDefaultBabelConfig
     ? `Babel config not found -> using default config.`
-    : `Babel config found in ${path(relative(cwd, partialConfig.babelrc || partialConfig.config))}.`
+    : `Babel config found in ${path(
+        relative(cwd, partialConfig.babelrc || partialConfig.config)
+      )}.`
 )
 
 const ignore = [`**/*.test${extensions}`, `**/*.test${extensions}.snap`]
@@ -97,7 +113,8 @@ let processedCount = 0
 try {
   for (const absolutePath of walkSync(src)) {
     const [, task, msg = 'ignored'] =
-      (!ignore.find(glob => minimatch(absolutePath, glob)) && rules.find(rule => minimatch(absolutePath, rule[0]))) ||
+      (!ignore.find((glob) => minimatch(absolutePath, glob)) &&
+        rules.find((rule) => minimatch(absolutePath, rule[0]))) ||
       []
     const relativePath = relative(src, absolutePath)
     if (task) {
