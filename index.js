@@ -21,11 +21,11 @@ const path = cyan
 const {
   _: [sourceFolder = 'src'],
   verbose,
-  extensions,
+  extensions
 } = parseArgs(process.argv.slice(2), {
   boolean: ['verbose'],
   string: ['extensions'],
-  default: { extensions: '.js' },
+  default: { extensions: '.js' }
 })
 const moduleFolder = 'es'
 const libFolder = 'lib'
@@ -36,7 +36,7 @@ const mod = resolve(moduleFolder)
 const lib = resolve(libFolder)
 
 const partialConfig = babel.loadPartialConfig({
-  filename: resolve('./package.json'),
+  filename: resolve('./package.json')
 })
 const useDefaultBabelConfig = !partialConfig.hasFilesystemConfig()
 const configFile = useDefaultBabelConfig
@@ -49,7 +49,7 @@ const configFile = useDefaultBabelConfig
 const log = (...args) => console.log(white.dim('transpile-js:'), ...args) // eslint-disable-line no-console
 
 const extensionRegExp = new RegExp(
-  `(?:${extensions.split(',').map(escapeRegExp).join('|')})$`,
+  `(?:${extensions.split(',').map(escapeRegExp).join('|')})$`
 )
 function transpileJs(filename, relativePath) {
   const outputPath = relativePath.replace(extensionRegExp, '.js')
@@ -61,14 +61,14 @@ function transpileJs(filename, relativePath) {
     envName: MODULE,
     ast: true,
     code: false,
-    configFile,
+    configFile
   })
 
   const { code: moduleCode } = babel.transformFromAstSync(ast, code, {
     filename,
     envName: MODULE,
     sourceMaps: false,
-    configFile,
+    configFile
   })
   outputFileSync(resolve(mod, outputPath), moduleCode)
 
@@ -76,7 +76,7 @@ function transpileJs(filename, relativePath) {
     filename,
     envName: LIB,
     sourceMaps: false,
-    configFile,
+    configFile
   })
   outputFileSync(resolve(lib, outputPath), libCode)
 }
@@ -91,8 +91,8 @@ function copyAsset(filename, relativePath) {
 
 log(
   `Cleaning files from previous build (${path(moduleFolder)}, ${path(
-    libFolder,
-  )}).`,
+    libFolder
+  )}).`
 )
 spawnSync('rm', ['-rf', moduleFolder, libFolder])
 
@@ -100,14 +100,14 @@ log(
   useDefaultBabelConfig
     ? `Babel config not found -> using default config.`
     : `Babel config found in ${path(
-        relative(cwd, partialConfig.babelrc || partialConfig.config),
-      )}.`,
+        relative(cwd, partialConfig.babelrc || partialConfig.config)
+      )}.`
 )
 
 const ignore = [`**/*.test${extensions}`, `**/*.test${extensions}.snap`]
 const rules = [
   [`**/*${extensions}`, transpileJs, 'transpiled'],
-  ['**/*', copyAsset, 'copied'],
+  ['**/*', copyAsset, 'copied']
 ]
 let processedCount = 0
 try {
