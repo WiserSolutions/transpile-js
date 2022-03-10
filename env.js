@@ -1,4 +1,4 @@
 module.exports = {
   MODULE: 'module',
-  LIB: 'lib'
+  LIB: 'lib',
 }

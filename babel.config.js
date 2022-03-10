@@ -1,6 +1,6 @@
 const { MODULE } = require('./env')
 
-module.exports = api => ({
+module.exports = (api) => ({
   presets: [
     [
       '@babel/preset-env',
@@ -10,19 +10,19 @@ module.exports = api => ({
             useBuiltIns: 'usage',
             // ...and don't transpile import/export statements
             modules: false,
-            corejs: 3
+            corejs: 3,
           }
         : {
             useBuiltIns: false,
-            modules: 'commonjs'
-          }
+            modules: 'commonjs',
+          },
     ],
     [
       '@babel/preset-react',
       {
-        runtime: 'automatic'
-      }
-    ]
+        runtime: 'automatic',
+      },
+    ],
   ],
   plugins: [
     // ES next transforms
@@ -30,8 +30,8 @@ module.exports = api => ({
       '@babel/plugin-transform-runtime',
       {
         regenerator: true,
-        corejs: 3
-      }
+        corejs: 3,
+      },
     ],
     '@babel/plugin-syntax-dynamic-import',
     '@babel/plugin-syntax-import-meta',
@@ -40,8 +40,8 @@ module.exports = api => ({
     [
       '@babel/plugin-proposal-decorators',
       {
-        legacy: true
-      }
+        legacy: true,
+      },
     ],
     '@babel/plugin-proposal-function-sent',
     '@babel/plugin-proposal-export-namespace-from',
@@ -53,14 +53,14 @@ module.exports = api => ({
     [
       '@babel/plugin-proposal-pipeline-operator',
       {
-        proposal: 'minimal'
-      }
+        proposal: 'minimal',
+      },
     ],
     '@babel/plugin-proposal-nullish-coalescing-operator',
     '@babel/plugin-proposal-do-expressions',
     '@babel/plugin-proposal-function-bind',
 
     // custom transforms
-    'styled-components'
-  ]
+    'styled-components',
+  ],
 })
