@@ -29,7 +29,7 @@
     "@babel/eslint-parser": "^7.17.0",
     "@wisersolutions/eslint-config": "^2.1.3",
     "@wisersolutions/eslint-formatter-idea": "^1.0.8",
-    "eslint": "^8.10.0",
+    "eslint": "^7.26.0",
     "eslint-config-prettier": "^8.5.0",
     "prettier": "^2.5.1"
   },
